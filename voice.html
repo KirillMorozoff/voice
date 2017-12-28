@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Пример использования поля для голосового ввода</title>
+    <script src="https://webasr.yandex.net/jsapi/v1/webspeechkit.js" type="text/javascript"></script>
+    <script src="voicefunctions.js" type="text/javascript"></script>
+</head>
+<body>
+  
+	<script>
+		function play () {
+		var tts = new ya.speechkit.Tts(
+		  // Настройки синтеза. Список доступных настроек см. в справочнике.
+		  {
+			// API-ключ. Может быть задан глобально через объект ya.speechkit.settings.
+			apikey: '5da59b5e-1ddc-4b31-9ed6-2e14c2d41550',
+			// Эмоциональная окраска: добрый голос.
+			emotion: 'neutral',
+			// Скорость речи.
+			speed: 0.9,
+			// Имя диктора.
+			speaker: 'jane'  
+		  }
+    );
+		
+		
+		
+	
+	var temp = "";
+	var description = "";
+	var result = "";
+	var XHR = new XMLHttpRequest();
+	XHR.onreadystatechange = function(){
+		if(XHR.readyState==4){
+			if(XHR.status==200){
+				
+				temp = JSON.parse(XHR.responseText).list[1].main.temp;
+				description = JSON.parse(XHR.responseText).list[1].weather["0"].description;
+				tts.speak(			  				   
+						 getTime() + " . " + getWeather(description) + " . " + Math.ceil(temp),
+						  {					
+							stopCallback: function () {
+							console.log("Озвучивание текста завершено.");
+							}
+						  }
+						);
+			} else{
+				console.log("Error");
+				return result;
+			}
+			
+		}
+	}
+	XHR.open("GET", "http://api.openweathermap.org/data/2.5/find?q=Moscow&units=metric&type=like&APPID=28f8ed9bac953b0e26819f8872047e4b");
+	XHR.send();
+	
+	
+
+		
+		
+		
+		
+		
+
+
+	
+
+
+
+	
+};
+
+
+
+
+	</script>
+	<style>
+		button{
+			background: orange;
+			border:none;
+			width: 200px;
+			height: 60px;
+			color:white;
+			font-size: 20px;
+			border-radius: 10px;
+		}
+	</style>
+	<button onclick="play()">Тест</button>
+
+</body>
